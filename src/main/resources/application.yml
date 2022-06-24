@@ -1,0 +1,14 @@
+spring:
+  data:
+    cassandra:
+      keyspace-name: betterreads
+      contact-points: 127.0.0.1
+      port: 9042
+      schema-action: none
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Iv1.b389a439279c80af
+            client-secret: 19c00498a1704a3990298fd15fa74e2a7a4e02eb
