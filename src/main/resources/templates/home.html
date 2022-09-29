@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Betterreads</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- <meta name="referrer" content="origin"> -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light"  style="padding-bottom: 20px">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Better Reads</a>
+
+            </div>
+        </nav>
+
+        <form action="search.html" th:attr="action=@{/searchBook}">
+            <div class="input-group mb-3">
+                <input type="text" name="query" class="form-control" placeholder="Search for a title"
+                       aria-label="Search query" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- loads all books which user is interacted with if at least there is one interaction-->
+
+        <h1>My books</h1>
+
+        <div class="card-mb-3" style="max-width: 540px;" th:if="${isAnyBook}" th:each=" bookByUserId : ${booksByUserId}">
+<!--
+            <div th:if="${#lists.size(bookByUserId.authorsName) > 0}">
+                <h1>Yessssssssssssss</h1>
+            </div>
+-->
+            <div class="card mb-3">
+                <div class="col-md-4">
+                    <img th:src="${bookByUserId.coverId}" class="card-img-top" alt="...">
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${bookByUserId.title}">Card title</h5>
+                    <p class="card-text" th:each="authorName : ${bookByUserId.authorsName}">Author:
+                        <!-- change url -->
+                        <a href="#" th:href="@{'/searchAuthor?q=' + ${authorName}}" th:text="${authorName}"></a>
+                    </p>
+                    <p class="card-text" th:text="'Started reading: ' + ${bookByUserId.startDate}">date you start reading book </p>
+                    <p class="card-text" th:text="'Completed reading: ' + ${bookByUserId.endDate}">date of finishing reading book </p>
+                    <p class="card-text" th:text="'Reading status: ' + ${bookByUserId.readingStatus}">reading status </p>
+                    <p class="card-text" th:text="'Rating: ' + ${bookByUserId.rating}"> rating </p>
+
+
+
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+
+                    <a href="#" th:href="@{'/books/' + ${bookByUserId.bookId}}" class="btn btn-primary">View book</a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- no books that user is interacted with -->
+
+
+        <div class="p-5 mb-4 bg-light rounded-3" th:unless="${isAnyBook}">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Better reads</h1>
+                <p class="col-md-8 fs-4">So far you have not got any relationship with any specific book. Try to add the first one.</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

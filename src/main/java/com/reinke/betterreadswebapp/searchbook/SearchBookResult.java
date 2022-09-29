@@ -1,8 +1,8 @@
-package com.reinke.betterreadswebapp.search;
+package com.reinke.betterreadswebapp.searchbook;
 
 import java.util.List;
 
-public class SearchResult {
+public class SearchBookResult {
 
     private int numFound;
     private List<BookResult> docs;

@@ -1,4 +1,4 @@
-package com.reinke.betterreadswebapp.search;
+package com.reinke.betterreadswebapp.searchbook;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ public class BookResult {
     private String first_publish_year;
     private String cover_i;
     private List<String> author_name;
+    // private List<String> author_key
 
     public String getKey() {
         return key;

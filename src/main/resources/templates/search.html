@@ -4,6 +4,7 @@
 
 <head>
             <meta charset="UTF-8" />
+            <title>Betterreads</title>
             <link rel="icon" type="image/svg+xml" href="favicon.svg" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <!-- <meta name="referrer" content="origin"> -->
@@ -28,7 +29,7 @@
         </div>
     </nav>
 
-    <form action="search.html" th:attr="action=@{/search}">
+    <form action="search.html" th:attr="action=@{/searchBook}">
         <div class="input-group mb-3">
             <input type="text" name="query" class="form-control" placeholder="Search for a title" aria-label="Search query" aria-describedby="button-addon2">
             <button type="submit" class="btn btn-outline-secondary" id="button-addon2">Search</button>
@@ -40,9 +41,12 @@
             <img th:src="${bookResult.cover_i}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title" th:text="${bookResult.title}">Card title</h5>
-                <p class="card-text" th:each="author : ${bookResult.author_name}">Authors:</p>
-                        <span th:text="${author}"></span>
-                <p class="card-text" th:text="${bookResult.first_publish_year}">first Publish year</p>            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <p class="card-text" th:each="authorName : ${bookResult.author_name}">Author:
+                        <a href="#" th:href="@{'/searchAuthor?q=' + ${authorName}}" th:text="${authorName}"></a>
+                        <!--   -->
+                </p>
+                <p class="card-text" th:text="'Publication year: ' + ${bookResult.first_publish_year}">first Publish year</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
 
                 <a href="#" th:href="@{'/books/' + ${bookResult.key}}" class="btn btn-primary">View book</a>
 

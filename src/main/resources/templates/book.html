@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Book</title>
+    <title>Betterreads</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!-- <meta name="referrer" content="origin"> -->
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -20,16 +20,19 @@
 </head>
 <body>
 <!-- As a heading -->
-<nav class="navbar bg-light">
-    <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Betterreads</span>
-    </div>
-</nav>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"  style="padding-bottom: 20px">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Better Reads</a>
+
+        </div>
+    </nav>
 
 
-    <form action="search.html" th:attr="action=@{/search}">
+    <form action="search.html" th:attr="action=@{/searchBook}">
         <div class="input-group mb-3">
-            <input type="text" name="query" class="form-control" placeholder="Search for a title" aria-label="Search query" aria-describedby="basic-addon2">
+            <input type="text" name="query" class="form-control" placeholder="Search for a title"
+                   aria-label="Search query" aria-describedby="basic-addon2">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Search</button>
             </div>
@@ -37,25 +40,117 @@
     </form>
 
 
-<div class="card mb-3" >
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img th:src="${cover}" class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title" th:text="'Title: ' + ${book.title}">Book title</h5>
-                <p class="card-text" th:text="${book.description}">Book description</p>
-                <p class="card-text" th:each="author : ${book.authorsName}">Authors:
-                    <span th:text="${author}"></span>
-                </p>
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img th:src="${cover}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="'Title: ' + ${book.title}">Book title</h5>
+                    <p class="card-text" th:text="${book.description}">Book description</p>
+                    <p class="card-text" th:each="authorName : ${book.authorsName}">Authors:
+                        <!-- change url -->
+                        <a href="#" th:href="@{'/searchAuthor?q=' + ${authorName}}" th:text="${author}">Author: </a>
+                    </p>
 
-                <p class="card-text" th:text="'Publication date: ' + ${book.publicationDate}"><small class="text-muted">Book published date</small></p>
+
+
+
+                    <p class="card-text" th:text="'Publication date: ' + ${book.publicationDate}"><small
+                            class="text-muted">Book published date</small></p>
+
+                    <!-- if user is logged in we show him a book form to fulfill -->
+
+
+                    <form action="search.html" th:if="${loggedIn}" th:attr="action=@{/addUserBook}" method="POST">
+                        <input type="hidden" name="bookId" th:value="${bookId}">
+                        <!-- if there is a userBook object in a model  -->
+                        <div th:if="${isUserBookPresent}">
+                            <div class="mb-3">
+                                <label for="startDateIfUserBookPresent" class="form-label">Start Date:</label>
+                                <input type="date" id="startDateIfUserBookPresent" name="startDate" class="form-control"
+                                       aria-label="Search query" aria-describedby="basic-addon2" th:field="*{userBook.startDate}">
+
+                            </div>
+                            <div class="mb-3">
+                                <label for="endDateIfUserBookPresent" class="form-label">Start Date:</label>
+                                <input type="date" id="endDateIfUserBookPresent" name="endDate" class="form-control"
+                                       aria-label="Search query" aria-describedby="basic-addon2" th:field="*{userBook.endDate}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="readingStatusIfUserBookPresent" class="form-label">Reading Status:</label>
+                                <select id="readingStatusIfUserBookPresent" name="readingStatus" class="form-select"
+                                        aria-label="Search query" aria-describedby="basic-addon2" th:field="*{userBook.readingStatus}">
+                                    <option selected value="not chosen">Not chosen</option>
+                                    <option value="not started">Not started</option>
+                                    <option value="started">Started</option>
+                                    <option value="finished">Finished</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ratingIfUserBookPresent" class="form-label">Rating: </label>
+                                <select id="ratingIfUserBookPresent" name="rating" class="form-select"
+                                        aria-label="Search query" aria-describedby="basic-addon2" th:field="*{userBook.rating}">
+                                    <option selected value="0">Select Rating</option>
+                                    <option value="1">&#9733;</option>
+                                    <option value="2">&#9733;&#9733;</option>
+                                    <option value="3">&#9733;&#9733;&#9733;</option>
+                                    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                                    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- else -->
+                        <div th:unless="${isUserBookPresent}">
+                            <div class="mb-3">
+                                <label for="startDateIfUserBookNotPresent" class="form-label">Start Date:</label>
+                                <input type="date" id="startDateIfUserBookNotPresent" name="startDate" class="form-control"
+                                       aria-label="Search query" aria-describedby="basic-addon2" >
+
+                            </div>
+                            <div class="mb-3">
+                                <label for="endDateIfUserBookNotPresent" class="form-label">Start Date:</label>
+                                <input type="date" id="endDateIfUserBookNotPresent" name="endDate" class="form-control"
+                                       aria-label="Search query" aria-describedby="basic-addon2">
+                            </div>
+                            <div class="mb-3">
+                                <label for="readingStatusIfUserBookNotPresent" class="form-label">Reading Status:</label>
+                                <select id="readingStatusIfUserBookNotPresent" name="readingStatus" class="form-select"
+                                        aria-label="Search query" aria-describedby="basic-addon2">
+                                    <option selected value="not chosen">Not chosen</option>
+                                    <option value="not started">Not started</option>
+                                    <option value="started">Started</option>
+                                    <option value="finished">Finished</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ratingIfUserBookNotPresent" class="form-label"></label>
+                                <select id="ratingIfUserBookNotPresent" name="rating" class="form-select"
+                                        aria-label="Search query" aria-describedby="basic-addon2">
+                                    <option selected value="0">Select Rating</option>
+                                    <option value="1">&#9733;</option>
+                                    <option value="2">&#9733;&#9733;</option>
+                                    <option value="3">&#9733;&#9733;&#9733;</option>
+                                    <option value="4">&#9733;&#9733;&#9733;&#9733;</option>
+                                    <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                        </div>
+
+                    </form>
+
+
+                </div>
             </div>
         </div>
     </div>
+
 </div>
-
-
 </body>
 </html>

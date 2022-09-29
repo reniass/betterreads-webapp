@@ -1,8 +1,6 @@
-package com.reinke.betterreadswebapp.search;
+package com.reinke.betterreadswebapp.searchbook;
 
-import com.reinke.betterreadswebapp.book.Book;
 import com.reinke.betterreadswebapp.book.BookRepository;
-import io.netty.util.internal.StringUtil;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +11,11 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-public class SearchController {
+public class SearchBookController {
 
     private WebClient webClient;
 
@@ -27,7 +23,7 @@ public class SearchController {
 
     private final String BOOK_COVER_ROOT = "https://covers.openlibrary.org/b/id/";
 
-    public SearchController(WebClient.Builder webClientBuilder, BookRepository bookRepository) {
+    public SearchBookController(WebClient.Builder webClientBuilder, BookRepository bookRepository) {
         this.webClient = webClientBuilder
                                     .exchangeStrategies(ExchangeStrategies.builder()
                                                                     .codecs(configurer -> configurer
@@ -39,16 +35,16 @@ public class SearchController {
         this.bookRepository = bookRepository;
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchBook")
     public String getSearchResults(@RequestParam("query") String query, Model model) {
         System.out.println("Query: " + query);
-        Mono<SearchResult> result = this.webClient.get()
+        Mono<SearchBookResult> result = this.webClient.get()
                 .uri("?q={query}", query)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(SearchResult.class);
+                .bodyToMono(SearchBookResult.class);
 
-        SearchResult searchResult = result.block();
+        SearchBookResult searchResult = result.block();
         List<BookResult> bookResults = searchResult.getDocs();
 
 
